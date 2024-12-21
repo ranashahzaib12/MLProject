@@ -1,63 +1,62 @@
 import os
 import sys
-import dill
+
+import numpy as np 
 import pandas as pd
-import numpy as np
+import dill
+import pickle
+from sklearn.metrics import r2_score
+from sklearn.model_selection import GridSearchCV
+
 from src.exception import CustomException
-from src.logger import logging
 
 def save_object(file_path, obj):
     try:
         dir_path = os.path.dirname(file_path)
+
         os.makedirs(dir_path, exist_ok=True)
+
         with open(file_path, "wb") as file_obj:
-            dill.dump(obj, file_obj)
-        logging.info(f"Object saved at {file_path}")
+            pickle.dump(obj, file_obj)
+
     except Exception as e:
         raise CustomException(e, sys)
-
-
-# # Load an object (e.g., preprocessor, model) from a file
-# def load_object(file_path):
-#     """
-#     Loads an object from a specified file path using dill.
     
-#     :param file_path: Path where the object is saved.
-#     :return: Loaded object.
-#     """
-#     try:
-#         with open(file_path, "rb") as file_obj:
-#             logging.info(f"Object loaded from {file_path}")
-#             return dill.load(file_obj)
-#     except Exception as e:
-#         raise CustomException(e, sys)
+def evaluate_models(X_train, y_train,X_test,y_test,models,param):
+    try:
+        report = {}
 
-# # Save a NumPy array to a CSV file
-# def save_numpy_array(file_path, array):
-#     """
-#     Saves a NumPy array to a specified CSV file.
-    
-#     :param file_path: Path where the NumPy array will be saved.
-#     :param array: NumPy array to save.
-#     """
-#     try:
-#         dir_path = os.path.dirname(file_path)
-#         os.makedirs(dir_path, exist_ok=True)
-#         np.savetxt(file_path, array, delimiter=",")
-#         logging.info(f"NumPy array saved at {file_path}")
-#     except Exception as e:
-#         raise CustomException(e, sys)
+        for i in range(len(list(models))):
+            model = list(models.values())[i]
+            para=param[list(models.keys())[i]]
 
-# # Load a NumPy array from a CSV file
-# def load_numpy_array(file_path):
-#     """
-#     Loads a NumPy array from a specified CSV file.
+            gs = GridSearchCV(model,para,cv=3)
+            gs.fit(X_train,y_train) 
+
+            model.set_params(**gs.best_params_)
+            model.fit(X_train,y_train)
+
+            #model.fit(X_train, y_train)  # Train model
+
+            y_train_pred = model.predict(X_train)
+
+            y_test_pred = model.predict(X_test)
+
+            train_model_score = r2_score(y_train, y_train_pred)
+
+            test_model_score = r2_score(y_test, y_test_pred)
+
+            report[list(models.keys())[i]] = test_model_score
+
+        return report
+
+    except Exception as e:
+        raise CustomException(e, sys)
     
-#     :param file_path: Path where the NumPy array is saved.
-#     :return: Loaded NumPy array.
-#     """
-#     try:
-#         logging.info(f"NumPy array loaded from {file_path}")
-#         return np.loadtxt(file_path, delimiter=",")
-#     except Exception as e:
-#         raise CustomException(e, sys)
+def load_object(file_path):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
