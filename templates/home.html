@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Score Predictor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #e8f6f3;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(145deg, #ffffff, #dce3e6);
+            border-radius: 12px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            color: #16a085;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            color: #2c3e50;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border: 2px solid #16a085;
+            background-color: #ffffff;
+        }
+        button {
+            background-color: #1abc9c;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #128f76;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Math Score Predictor</h1>
+        <form action= "{{url_for('predict_data')}}" method="POST">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <label for="race_ethnicity">Race/Ethnicity:</label>
+            <select id="race_ethnicity" name="race_ethnicity" required>
+                <option value="" disabled selected>Select Group</option>
+                <option value="group A">Group A</option>
+                <option value="group B">Group B</option>
+                <option value="group C">Group C</option>
+                <option value="group D">Group D</option>
+                <option value="group E">Group E</option>
+            </select>
+
+            <label for="parental_level_of_education">Parental Level of Education:</label>
+            <select id="parental_level_of_education" name="parental_level_of_education" required>
+                <option value="" disabled selected>Select Education Level</option>
+                <option value="some high school">Some High School</option>
+                <option value="high school">High School</option>
+                <option value="associate's degree">Associate's Degree</option>
+                <option value="some college">Some College</option>
+                <option value="bachelor's degree">Bachelor's Degree</option>
+                <option value="master's degree">Master's Degree</option>
+            </select>
+
+            <label for="lunch">Lunch:</label>
+            <select id="lunch" name="lunch" required>
+                <option value="" disabled selected>Select Lunch Type</option>
+                <option value="standard">Standard</option>
+                <option value="free/reduced">Free/Reduced</option>
+            </select>
+
+            <label for="test_preparation_course">Test Preparation Course:</label>
+            <select id="test_preparation_course" name="test_preparation_course" required>
+                <option value="" disabled selected>Choose Course</option>
+                <option value="none">None</option>
+                <option value="completed">Completed</option>
+            </select>
+
+            <label for="reading_score">Reading Score:</label>
+            <input type="number" id="reading_score" name="reading_score" required min="0" max="100" placeholder="Enter Reading Score">
+
+            <label for="writing_score">Writing Score:</label>
+            <input type="number" id="writing_score" name="writing_score" required min="0" max="100" placeholder="Enter Writing Score">
+
+            <button type="submit">Predict Math Score</button>
+        </form>
+    </div>
+    <h2>
+        THE Prediction IS {{prediction}}
+    </h2>
+</body>
+</html>
