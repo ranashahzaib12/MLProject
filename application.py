@@ -1,5 +1,9 @@
 # Purely created for Deployment in aws Beanstalk as 
 # As in the AWS documantation application:application is written
+
+# PYTHONPATH
+# /var/app/venv/staging-LQM1lest/bin
+
 from flask import Flask, request, jsonify, render_template
 from src.pipeline.predict_pipeline import PredictPipeline, CustomData
 from src.exception import CustomException
